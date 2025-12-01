@@ -41,7 +41,6 @@ O projeto está mapeado com **JPA/Hibernate** (anotações `@Entity`, `@ManyToOn
 
 #### Imagens do MER e Modelo Relacional
 
-Substitua os itens abaixo pelos diagramas gerados na ferramenta escolhida (draw.io, MySQL Workbench, Lucidchart, etc.):
 
 - **MER (Modelo Entidade-Relacionamento)**  
 
@@ -284,4 +283,4 @@ O backend subirá por padrão em `http://localhost:8080`.
 - **Relevância das operações**: as consultas complexas são diretamente relacionadas ao domínio acadêmico (histórico de aluno, média de turmas, ranking de professores, disciplinas ociosas, alunos com muitas matrículas, etc.).
 - **Separação em camadas**: controllers, services, repositories, models e DTOs, evidenciando boas práticas de arquitetura.
 
-Este README foi estruturado para apoiar a **apresentação ao professor**, servindo como guia de navegação do código, do banco de dados e das consultas complexas exigidas no trabalho.
+Responsaveis: Eurico Santiago, Miguel Leone, Maria Luiza, Luiz Felipe Leite, João Gabriel, Diogo Peixoto
