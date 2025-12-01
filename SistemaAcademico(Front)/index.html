@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Acadêmico - Demonstração Completa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 20px;
+        }
+        h1 { color: #0056b3; }
+        h2 { color: #333; border-bottom: 2px solid #ccc; padding-bottom: 5px; }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #login-area, #data-area {
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        input[type="text"], input[type="password"], input[type="number"] {
+            padding: 8px;
+            margin: 5px 10px 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #query-controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px dashed #aaa;
+            border-radius: 5px;
+            
+        }
+        hr { margin: 15px 0; border-top: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Sistema Acadêmico - Demonstração Completa</h1>
+        <p>Projeto de Banco de Dados e Aplicação Conectada (Spring Boot + MySQL + JS)</p>
+        <hr>
+
+        <div id="login-area">
+            <h2>🔒 Acesso ao Sistema</h2>
+            <form id="login-form">
+                <label for="username">Usuário:</label>
+                <input type="text" id="username" required value="admin">
+                
+                <label for="password">Senha:</label>
+                <input type="password" id="password" required value="senha123">
+                
+                <button type="submit">Entrar</button>
+                <p id="login-message" style="color: red; margin-top: 10px;"></p>
+            </form>
+        </div>
+
+        <div id="data-area" style="display: none;">
+            <h2>📊 Consultas e Manipulação (Etapa 4 & 5)</h2>
+            
+            <div id="query-controls">
+                
+                <h3>Consultas Complexas</h3>
+
+                <label for="alunoIdInput">Aluno ID (para Histórico):</label>
+                <input type="number" id="alunoIdInput" value="1" min="1">
+                <button id="fetch-history-button">1. Histórico Detalhado (JOINs)</button>
+                <button id="fetch-regulares-button">2. Alunos com Múltiplas Matrículas (Subquery IN)</button>
+
+                <hr>
+                
+                <button id="fetch-media-geral-button">3. Média Geral por Turma (Agregada)</button>
+                <label for="rankingAnoInput" style="margin-left: 20px;">Ano Ranking:</label>
+                <input type="number" id="rankingAnoInput" value="2025" min="2020" style="width: 80px;">
+                <button id="fetch-ranking-button">4. Ranking Profs. por Turma (Agregada/LIMIT)</button>
+
+                <hr>
+
+                <button id="fetch-sem-turma-button">5. Disciplinas Sem Turma (Subquery NOT IN)</button>
+                <label for="disciplinaTermoInput" style="margin-left: 20px;">Buscar Disciplina (LIKE):</label>
+                <input type="text" id="disciplinaTermoInput" value="Dados" style="width: 120px;">
+                <button id="fetch-busca-parcial-button">6. Buscar por Nome (Strings LIKE)</button>
+
+                <hr>
+
+                <h3>Consultas CRUD Básicas (Listar Todos)</h3>
+                <p>Listagens simples para verificar a integridade e mapeamento dos dados.</p>
+                <div>
+                    <button id="fetch-alunos-all-button">Listar Alunos</button>
+                    <button id="fetch-professores-all-button">Listar Professores</button>
+                    <button id="fetch-disciplinas-all-button">Listar Disciplinas</button>
+                    <button id="fetch-cursos-all-button">Listar Cursos</button>
+                    <button id="fetch-turmas-all-button">Listar Turmas</button>
+                </div>
+            </div>
+
+            <h3>Resultados da Última Consulta</h3>
+            <table id="results-table">
+                <thead>
+                    <tr></tr> </thead>
+                <tbody>
+                    <tr><td colspan="10">Clique em um botão de consulta para carregar os dados.</td></tr>
+                </tbody>
+            </table>
+            
+            <button id="logout-button" style="margin-top: 30px; background-color: #dc3545;">Sair (Logout)</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

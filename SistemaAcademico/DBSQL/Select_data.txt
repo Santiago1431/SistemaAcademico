@@ -1,0 +1,106 @@
+-- Parte 1
+-- A) Histórico de notas por aluno no curso
+SELECT 
+    a.nome AS aluno,
+    d.nome AS disciplina,
+    mt.nota_final,
+    mt.Frequencia,
+    t.periodo,
+    p.nome AS professor
+FROM Aluno a
+JOIN Matricula_Turma mt ON mt.id_aluno = a.id_aluno
+JOIN Turma t ON t.id_turma = mt.id_turma
+JOIN Disciplina d ON d.id_disciplina = t.id_disciplina
+JOIN Professor p ON p.id_professor = t.id_professor
+ORDER BY a.nome, d.nome;
+
+-- B) Professores por curso
+SELECT DISTINCT
+    c.nome AS curso,
+    p.nome AS professor,
+    d.nome AS disciplina
+FROM Curso c
+JOIN Curso_Disciplina cd ON cd.id_curso = c.id_curso
+JOIN Disciplina d ON d.id_disciplina = cd.id_disciplina
+JOIN Turma t ON t.id_disciplina = d.id_disciplina
+JOIN Professor p ON p.id_professor = t.id_professor
+ORDER BY c.nome, p.nome;
+
+-- C) Coordenadores antigos por ano específico
+SELECT
+    c.nome AS curso,
+    p.nome AS coordenador,
+    YEAR(co.inicio) AS ano_inicio
+FROM Coordenacao co
+JOIN Curso c ON c.id_curso = co.id_curso
+JOIN Professor p ON p.id_professor = co.id_professor
+WHERE YEAR(co.inicio) = 2023     -- coloque o ano desejado
+ORDER BY c.nome;
+
+-- Parte 2
+-- A) Média geral por turma
+SELECT 
+    t.id_turma,
+    d.nome AS disciplina,
+    AVG(mt.nota_final) AS media_notas,
+    COUNT(mt.id_aluno) AS total_alunos
+FROM Turma t
+JOIN Matricula_Turma mt ON t.id_turma = mt.id_turma
+JOIN Disciplina d ON d.id_disciplina = t.id_disciplina
+GROUP BY t.id_turma;
+
+-- B) Disciplinas com maior reprovação (média < 6)
+SELECT
+    d.nome AS disciplina,
+    AVG(mt.nota_final) AS media_disciplina
+FROM Disciplina d
+JOIN Turma t ON t.id_disciplina = d.id_disciplina
+JOIN Matricula_Turma mt ON mt.id_turma = t.id_turma
+WHERE t.periodo = '2025/1'   -- coloque o período desejado
+GROUP BY d.id_disciplina
+HAVING media_disciplina < 6;
+
+-- C)
+SELECT 
+    p.nome AS professor,
+    COUNT(t.id_turma) AS total_turmas
+FROM Professor p
+JOIN Turma t ON t.id_professor = p.id_professor
+WHERE t.periodo LIKE '2025%'   -- ano desejado
+GROUP BY p.id_professor
+ORDER BY total_turmas DESC
+LIMIT 1;
+
+-- Parte 3
+-- A) Alunos regulares: matriculados em MAIS de uma turma
+SELECT nome
+FROM Aluno
+WHERE id_aluno IN (
+    SELECT id_aluno
+    FROM Matricula_Turma
+    GROUP BY id_aluno
+    HAVING COUNT(id_turma) > 1
+);
+
+-- B) Disciplinas sem NENHUMA turma
+SELECT nome
+FROM Disciplina
+WHERE id_disciplina NOT IN (
+    SELECT id_disciplina
+    FROM Turma
+);
+
+-- C) Maior nota na disciplina "Banco de Dados"
+SELECT a.nome, mt.nota_final
+FROM Matricula_Turma mt
+JOIN Turma t ON t.id_turma = mt.id_turma
+JOIN Disciplina d ON d.id_disciplina = t.id_disciplina
+JOIN Aluno a ON a.id_aluno = mt.id_aluno
+WHERE d.nome LIKE '%Banco de Dados%'
+AND mt.nota_final = (
+    SELECT MAX(mt2.nota_final)
+    FROM Matricula_Turma mt2
+    JOIN Turma t2 ON t2.id_turma = mt2.id_turma
+    JOIN Disciplina d2 ON d2.id_disciplina = t2.id_disciplina
+    WHERE d2.nome LIKE '%Banco de Dados%'
+);

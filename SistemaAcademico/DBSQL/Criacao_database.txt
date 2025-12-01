@@ -1,0 +1,108 @@
+USE academico_db;
+-- 1. Criação das tabelas base (sem FKs para evitar erro de dependência)
+
+CREATE TABLE Aluno
+(
+    id_aluno INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(255) NOT NULL,
+    CPF VARCHAR(14) NOT NULL,
+    data_nascimento DATE NOT NULL,
+    UNIQUE (CPF)
+);
+
+CREATE TABLE Professor
+(
+    id_professor INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(255) NOT NULL,
+    CPF VARCHAR(14) NOT NULL,
+    Departamento VARCHAR(100),
+    UNIQUE (CPF)
+);
+
+CREATE TABLE Disciplina
+(
+    id_disciplina INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(150) NOT NULL,
+    Carga FLOAT NOT NULL
+);
+
+CREATE TABLE Curso
+(
+    id_curso INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(150) NOT NULL,
+    Carga FLOAT NOT NULL
+    -- Coordenador_id foi movido para a tabela Coordenacao para histórico
+);
+
+-- 2. Criação das tabelas de relacionamento (Compostas e Ocorrência)
+
+CREATE TABLE Curso_Disciplina
+(
+    id_curso INT NOT NULL,
+    id_disciplina INT NOT NULL,
+    PRIMARY KEY (id_curso, id_disciplina) -- Chave primária composta
+);
+
+CREATE TABLE Coordenacao
+(
+    id_curso INT NOT NULL,
+    id_professor INT NOT NULL,
+    inicio DATE NOT NULL,
+    -- Uma tabela para registrar QUEM coordena QUAL curso (PK composta opcional)
+    PRIMARY KEY (id_curso, inicio) 
+);
+
+CREATE TABLE Turma
+(
+    id_turma INT PRIMARY KEY AUTO_INCREMENT,
+    id_disciplina INT NOT NULL,
+    id_professor INT NOT NULL,
+    periodo VARCHAR(10) NOT NULL, -- Ex: '2025/1'
+    Turno ENUM('Matutino', 'Vespertino', 'Noturno') NOT NULL,
+    Horario VARCHAR(50)
+);
+
+CREATE TABLE Matricula_Turma
+(
+    id_aluno INT NOT NULL,
+    id_turma INT NOT NULL,
+    nota_final DECIMAL(4, 2), -- Ex: 10.00
+    Frequencia DECIMAL(5, 2), -- Ex: 100.00
+    Situacao ENUM('Aprovado', 'Reprovado', 'Em Curso') NOT NULL,
+    PRIMARY KEY (id_aluno, id_turma) -- Chave primária composta (Aluno faz a Turma)
+);
+
+
+-- 3. Adição das Chaves Estrangeiras (FKs)
+
+ALTER TABLE Curso_Disciplina ADD FOREIGN KEY(id_curso) REFERENCES Curso (id_curso);
+ALTER TABLE Curso_Disciplina ADD FOREIGN KEY(id_disciplina) REFERENCES Disciplina (id_disciplina);
+
+ALTER TABLE Coordenacao ADD FOREIGN KEY(id_curso) REFERENCES Curso (id_curso);
+ALTER TABLE Coordenacao ADD FOREIGN KEY(id_professor) REFERENCES Professor (id_professor);
+
+ALTER TABLE Turma ADD FOREIGN KEY(id_disciplina) REFERENCES Disciplina (id_disciplina);
+ALTER TABLE Turma ADD FOREIGN KEY(id_professor) REFERENCES Professor (id_professor);
+
+ALTER TABLE Matricula_Turma ADD FOREIGN KEY(id_aluno) REFERENCES Aluno (id_aluno);
+ALTER TABLE Matricula_Turma ADD FOREIGN KEY(id_turma) REFERENCES Turma (id_turma);
+
+
+
+-- 1. Renomear Entidades Principais
+RENAME TABLE Aluno TO aluno;
+RENAME TABLE Professor TO professor;
+RENAME TABLE Disciplina TO disciplina;
+RENAME TABLE Curso TO curso;
+
+-- 2. Renomear Entidades de Ocorrência
+RENAME TABLE Turma TO turma;
+RENAME TABLE Matricula_Turma TO matricula_turma;
+
+-- 3. Renomear Tabelas Associativas
+RENAME TABLE Curso_Disciplina TO curso_disciplina;
+RENAME TABLE Coordenacao TO coordenacao;
+
+-- Nota: O comando RENAME TABLE gerencia automaticamente as chaves estrangeiras (FKs)
+-- no MySQL, atualizando as referências internas.
+

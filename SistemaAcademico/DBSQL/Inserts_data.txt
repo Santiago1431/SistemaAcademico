@@ -1,0 +1,130 @@
+-- Garante que o AUTO_INCREMENT da próxima inserção continue de onde parou.
+
+-- 1. Inserção na Tabela ALUNO
+INSERT INTO Aluno (nome, CPF, data_nascimento) VALUES
+('Miguel Leone', '123.456.789-01', '2002-05-10'),
+('Maria Luisa Alves', '234.567.890-12', '2001-08-22'),
+('Joao Gabriel Martins', '345.678.901-23', '2003-03-15'),
+('Eurico Santiago', '456.789.012-34', '2002-11-30'),
+('Luis Felipe Barbosa', '567.890.123-45', '2001-01-19'),
+('Diogo Peixoto', '678.901.234-56', '2000-12-01'),
+('Maria Nogueira', '789.012.345-67', '2004-02-17'),
+('Julia Silva', '890.123.456-78', '2003-07-25'),
+('Matheus Costa', '901.234.567-89', '2002-09-14'),
+('Thiago Ribeiro', '012.345.678-90', '2001-04-09');
+
+-- 2. Inserção na Tabela PROFESSOR
+INSERT INTO Professor (nome, CPF, Departamento) VALUES
+('Paulo Bressan', '111.111.111-11', 'Computação'),
+('Mariane Moreira', '222.222.222-22', 'Matemática'),
+('Rodrigo Pagliares', '333.333.333-33', 'Física'),
+('Flavio Gonzaga', '444.444.444-44', 'Administração'),
+('Jonatas Bloch', '555.555.555-55', 'Computação'),
+('Renata Gabriel', '666.666.666-66', 'Biologia'),
+('Lucyenne Bexiga', '777.777.777-77', 'Química'),
+('Cezar Menotti', '888.888.888-88', 'Engenharia'),
+('Fabiano Menotti', '999.999.999-99', 'História'),
+('Lauana Prado', '000.000.000-00', 'Computação');
+
+-- 3. Inserção na Tabela DISCIPLINA
+INSERT INTO Disciplina (nome, Carga) VALUES
+('Algoritmos', 60),
+('Banco de Dados', 80),
+('Estruturas de Dados', 60),
+('Cálculo I', 90),
+('Física I', 75),
+('Programação Web', 60),
+('Administração Geral', 60),
+('Química Básica', 60),
+('História da Tecnologia', 40),
+('Biologia Geral', 60),
+('Introdução à Lógica', 40),
+('Ética Profissional', 30);
+
+-- 4. Inserção na Tabela CURSO
+INSERT INTO Curso (nome, Carga) VALUES
+('Ciência da Computação', 3200),
+('Engenharia de Produção', 3600),
+('Administração', 3000),
+('Sistemas de Informação', 3200),
+('Engenharia Química', 3800),
+('Matemática', 3000),
+('História', 2800),
+('Biologia', 3000),
+('Física', 3100),
+('Química', 3000);
+
+-- 5. Inserção na Tabela CURSO_DISCIPLINA (Relacionamento M:N)
+-- Corrigido: Inclui os nomes das colunas
+INSERT INTO Curso_Disciplina (id_curso, id_disciplina) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 6),
+(2, 4),
+(2, 5),
+(3, 7),
+(4, 1),
+(4, 2),
+(5, 8),
+(1, 11),
+(4, 11),
+(6, 11),
+(3, 12),
+(8, 12),
+(1, 12);
+
+-- 6. Inserção na Tabela COORDENACAO
+-- Corrigido: Inclui os nomes das colunas
+INSERT INTO Coordenacao (id_curso, id_professor, inicio) VALUES
+(1, 1, '2023-01-01'),
+(2, 2, '2022-01-01'),
+(3, 4, '2021-01-01'),
+(4, 10, '2024-01-01'),
+(5, 7, '2020-01-01'),
+(6, 2, '2023-06-01'),
+(7, 9, '2022-03-01'),
+(8, 6, '2021-08-01'),
+(9, 3, '2020-02-01'),
+(10, 7, '2024-02-01');
+
+-- 7. Inserção na Tabela TURMA
+INSERT INTO Turma (id_disciplina, id_professor, periodo, Turno, Horario) VALUES
+(1, 1, '2025/1', 'MATUTINO', '08:00 - 10:00'),
+(2, 10, '2025/1', 'NOTURNO', '19:00 - 21:00'),
+(3, 1, '2025/1', 'VESPETINO', '14:00 - 16:00'),
+(4, 2, '2025/1', 'MATUTINO', '10:00 - 12:00'),
+(5, 3, '2025/1', 'NOTURNO', '19:00 - 21:00'),
+(6, 10, '2025/1', 'MATUTINO', '09:00 - 11:00'),
+(7, 4, '2025/1', 'VESPETINO', '15:00 - 17:00'),
+(8, 7, '2025/1', 'MATUTINO', '08:00 - 10:00'),
+(9, 9, '2025/1', 'NOTURNO', '20:00 - 22:00'),
+(10, 6, '2025/1', 'VESPETINO', '13:00 - 15:00');
+
+-- 8. Inserção na Tabela MATRICULA_TURMA
+INSERT INTO Matricula_Turma (id_aluno, id_turma, nota_final, Frequencia, Situacao) VALUES
+(1, 1, 8.50, 95, 'APROVADO'),
+(2, 2, 7.00, 90, 'APROVADO'),
+(3, 3, 6.20, 85, 'APROVADO'),
+(4, 4, 5.00, 70, 'REPROVADO'),
+(5, 5, 8.90, 98, 'APROVADO'),
+(6, 6, NULL, 80, 'Em Curso'),
+(7, 7, NULL, 75, 'Em Curso'),
+(8, 8, 9.40, 99, 'APROVADO'),
+(9, 9, 7.80, 92, 'APROVADO'),
+(10, 10, 4.50, 60, 'REPROVADO'),
+(1, 2, 8.0, 90, 'APROVADO'),
+(1, 3, 7.5, 85, 'APROVADO'),
+(2, 1, 6.5, 88, 'APROVADO'),
+(2, 4, 7.8, 92, 'APROVADO'),
+(3, 5, 5.5, 70, 'REPROVADO'),
+(3, 6, 8.2, 95, 'APROVADO'),
+(4, 7, 6.9, 80, 'APROVADO'),
+(5, 8, 7.7, 93, 'APROVADO'),
+(6, 9, 8.4, 96, 'APROVADO'),
+(7, 10, 6.0, 89, 'APROVADO'),
+(8, 1, 8.8, 94, 'APROVADO'),
+(9, 2, 7.9, 91, 'APROVADO'),
+(10, 3, 9.1, 97, 'APROVADO'),
+(1, 4, 6.2, 83, 'APROVADO'),
+(2, 5, 8.3, 95, 'APROVADO');
