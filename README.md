@@ -76,6 +76,211 @@ Scripts SQL localizados em `SistemaAcademico/DBSQL`:
 
 > **Nota:** dependendo da configuração do MySQL (sensibilidade a maiúsculas/minúsculas em nomes de tabela), os `INSERTs` podem funcionar tanto com nomes capitalizados (`Aluno`) quanto com minúsculos (`aluno`). Em ambiente sensível a case, ajuste os nomes se necessário.
 
+#### Código SQL – DDL (Criação das Tabelas)
+
+```sql
+USE academico_db;
+
+-- 1. Criação das tabelas base
+CREATE TABLE Aluno
+(
+    id_aluno INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(255) NOT NULL,
+    CPF VARCHAR(14) NOT NULL,
+    data_nascimento DATE NOT NULL,
+    UNIQUE (CPF)
+);
+
+CREATE TABLE Professor
+(
+    id_professor INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(255) NOT NULL,
+    CPF VARCHAR(14) NOT NULL,
+    Departamento VARCHAR(100),
+    UNIQUE (CPF)
+);
+
+CREATE TABLE Disciplina
+(
+    id_disciplina INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(150) NOT NULL,
+    Carga FLOAT NOT NULL
+);
+
+CREATE TABLE Curso
+(
+    id_curso INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(150) NOT NULL,
+    Carga FLOAT NOT NULL
+    -- Coordenador_id foi movido para a tabela Coordenacao para histórico
+);
+
+-- 2. Tabelas de relacionamento (associativas / ocorrência)
+CREATE TABLE Curso_Disciplina
+(
+    id_curso INT NOT NULL,
+    id_disciplina INT NOT NULL,
+    PRIMARY KEY (id_curso, id_disciplina)
+);
+
+CREATE TABLE Coordenacao
+(
+    id_curso INT NOT NULL,
+    id_professor INT NOT NULL,
+    inicio DATE NOT NULL,
+    PRIMARY KEY (id_curso, inicio)
+);
+
+CREATE TABLE Turma
+(
+    id_turma INT PRIMARY KEY AUTO_INCREMENT,
+    id_disciplina INT NOT NULL,
+    id_professor INT NOT NULL,
+    periodo VARCHAR(10) NOT NULL, -- Ex: '2025/1'
+    Turno ENUM('Matutino', 'Vespertino', 'Noturno') NOT NULL,
+    Horario VARCHAR(50)
+);
+
+CREATE TABLE Matricula_Turma
+(
+    id_aluno INT NOT NULL,
+    id_turma INT NOT NULL,
+    nota_final DECIMAL(4, 2),
+    Frequencia DECIMAL(5, 2),
+    Situacao ENUM('Aprovado', 'Reprovado', 'Em Curso') NOT NULL,
+    PRIMARY KEY (id_aluno, id_turma)
+);
+
+-- 3. Chaves estrangeiras (restrições de integridade referencial)
+ALTER TABLE Curso_Disciplina ADD FOREIGN KEY(id_curso) REFERENCES Curso (id_curso);
+ALTER TABLE Curso_Disciplina ADD FOREIGN KEY(id_disciplina) REFERENCES Disciplina (id_disciplina);
+
+ALTER TABLE Coordenacao ADD FOREIGN KEY(id_curso) REFERENCES Curso (id_curso);
+ALTER TABLE Coordenacao ADD FOREIGN KEY(id_professor) REFERENCES Professor (id_professor);
+
+ALTER TABLE Turma ADD FOREIGN KEY(id_disciplina) REFERENCES Disciplina (id_disciplina);
+ALTER TABLE Turma ADD FOREIGN KEY(id_professor) REFERENCES Professor (id_professor);
+
+ALTER TABLE Matricula_Turma ADD FOREIGN KEY(id_aluno) REFERENCES Aluno (id_aluno);
+ALTER TABLE Matricula_Turma ADD FOREIGN KEY(id_turma) REFERENCES Turma (id_turma);
+
+-- 4. Renomear tabelas para padrão em minúsculo (opcional, compatível com o JPA)
+RENAME TABLE Aluno TO aluno;
+RENAME TABLE Professor TO professor;
+RENAME TABLE Disciplina TO disciplina;
+RENAME TABLE Curso TO curso;
+RENAME TABLE Turma TO turma;
+RENAME TABLE Matricula_Turma TO matricula_turma;
+RENAME TABLE Curso_Disciplina TO curso_disciplina;
+RENAME TABLE Coordenacao TO coordenacao;
+```
+
+#### Código SQL – Inserts (Exemplo)
+
+> O script completo de inserts está em `DBSQL/Inserts_data.txt`. Abaixo, um trecho ilustrativo.
+
+```sql
+-- Alunos
+INSERT INTO Aluno (nome, CPF, data_nascimento) VALUES
+('Miguel Leone', '123.456.789-01', '2002-05-10'),
+('Maria Luisa Alves', '234.567.890-12', '2001-08-22'),
+('Joao Gabriel Martins', '345.678.901-23', '2003-03-15'),
+('Eurico Santiago', '456.789.012-34', '2002-11-30'),
+('Luis Felipe Barbosa', '567.890.123-45', '2001-01-19'),
+('Diogo Peixoto', '678.901.234-56', '2000-12-01'),
+('Maria Nogueira', '789.012.345-67', '2004-02-17'),
+('Julia Silva', '890.123.456-78', '2003-07-25'),
+('Matheus Costa', '901.234.567-89', '2002-09-14'),
+('Thiago Ribeiro', '012.345.678-90', '2001-04-09');
+
+-- Professores
+INSERT INTO Professor (nome, CPF, Departamento) VALUES
+('Paulo Bressan', '111.111.111-11', 'Computação'),
+('Mariane Moreira', '222.222.222-22', 'Matemática'),
+('Rodrigo Pagliares', '333.333.333-33', 'Física'),
+('Flavio Gonzaga', '444.444.444-44', 'Administração'),
+('Jonatas Bloch', '555.555.555-55', 'Computação'),
+('Renata Gabriel', '666.666.666-66', 'Biologia'),
+('Lucyenne Bexiga', '777.777.777-77', 'Química'),
+('Cezar Menotti', '888.888.888-88', 'Engenharia'),
+('Fabiano Menotti', '999.999.999-99', 'História'),
+('Lauana Prado', '000.000.000-00', 'Computação');
+
+-- Disciplinas (exemplo)
+INSERT INTO Disciplina (nome, Carga) VALUES
+('Algoritmos', 60),
+('Banco de Dados', 80),
+('Estruturas de Dados', 60),
+('Cálculo I', 90);
+
+-- Turmas (exemplo)
+INSERT INTO Turma (id_disciplina, id_professor, periodo, Turno, Horario) VALUES
+(1, 1, '2025/1', 'MATUTINO', '08:00 - 10:00'),
+(2, 10, '2025/1', 'NOTURNO', '19:00 - 21:00'),
+(3, 1, '2025/1', 'VESPETINO', '14:00 - 16:00');
+```
+
+#### Código SQL – Consultas Complexas (Selects)
+
+> Baseado em `DBSQL/Select_data.txt`, mostrando o vínculo entre o banco de dados e as consultas expostas na aplicação.
+
+```sql
+-- A) Histórico de notas por aluno (JOINs múltiplos)
+SELECT 
+    a.nome AS aluno,
+    d.nome AS disciplina,
+    mt.nota_final,
+    mt.Frequencia,
+    t.periodo,
+    p.nome AS professor
+FROM Aluno a
+JOIN Matricula_Turma mt ON mt.id_aluno = a.id_aluno
+JOIN Turma t ON t.id_turma = mt.id_turma
+JOIN Disciplina d ON d.id_disciplina = t.id_disciplina
+JOIN Professor p ON p.id_professor = t.id_professor
+ORDER BY a.nome, d.nome;
+
+-- B) Média geral por turma (AVG, COUNT, GROUP BY)
+SELECT 
+    t.id_turma,
+    d.nome AS disciplina,
+    AVG(mt.nota_final) AS media_notas,
+    COUNT(mt.id_aluno) AS total_alunos
+FROM Turma t
+JOIN Matricula_Turma mt ON t.id_turma = mt.id_turma
+JOIN Disciplina d ON d.id_disciplina = t.id_disciplina
+GROUP BY t.id_turma;
+
+-- C) Professores com mais turmas em um ano (ranking / ORDER BY / LIMIT)
+SELECT 
+    p.nome AS professor,
+    COUNT(t.id_turma) AS total_turmas
+FROM Professor p
+JOIN Turma t ON t.id_professor = p.id_professor
+WHERE t.periodo LIKE '2025%'   -- ano desejado
+GROUP BY p.id_professor
+ORDER BY total_turmas DESC
+LIMIT 1;
+
+-- D) Alunos regulares: matriculados em MAIS de uma turma (subquery + HAVING)
+SELECT nome
+FROM Aluno
+WHERE id_aluno IN (
+    SELECT id_aluno
+    FROM Matricula_Turma
+    GROUP BY id_aluno
+    HAVING COUNT(id_turma) > 1
+);
+
+-- E) Disciplinas sem NENHUMA turma (subquery NOT IN)
+SELECT nome
+FROM Disciplina
+WHERE id_disciplina NOT IN (
+    SELECT id_disciplina
+    FROM Turma
+);
+```
+
 ---
 
 ### Arquitetura da Aplicação (Etapa 4)
