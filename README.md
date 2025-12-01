@@ -45,11 +45,11 @@ Substitua os itens abaixo pelos diagramas gerados na ferramenta escolhida (draw.
 
 - **MER (Modelo Entidade-Relacionamento)**  
 
-  <img width="1011" height="432" alt="Image" src="https://github.com/user-attachments/assets/7bf240ea-dc3b-457c-bb24-a6160149d630" />
+<img width="1111" height="765" alt="Image" src="https://github.com/user-attachments/assets/2756e007-50ac-41f0-a10c-a9f7de7e4cb7" />
 
 - **Modelo Relacional (Esquema de Tabelas)**  
  
-  `docs/imagens/modelo-relacional.png`
+<img width="1011" height="432" alt="Image" src="https://github.com/user-attachments/assets/7bf240ea-dc3b-457c-bb24-a6160149d630" />
 
 Sugestão de pasta no repositório: `docs/imagens/`.
 
