@@ -44,11 +44,11 @@ O projeto está mapeado com **JPA/Hibernate** (anotações `@Entity`, `@ManyToOn
 Substitua os itens abaixo pelos diagramas gerados na ferramenta escolhida (draw.io, MySQL Workbench, Lucidchart, etc.):
 
 - **MER (Modelo Entidade-Relacionamento)**  
-  _Insira aqui uma imagem ou link do diagrama MER:_  
-  `docs/imagens/mer.png`
+
+  <img width="1011" height="432" alt="Image" src="https://github.com/user-attachments/assets/7bf240ea-dc3b-457c-bb24-a6160149d630" />
 
 - **Modelo Relacional (Esquema de Tabelas)**  
-  _Insira aqui uma imagem ou link do modelo relacional:_  
+ 
   `docs/imagens/modelo-relacional.png`
 
 Sugestão de pasta no repositório: `docs/imagens/`.
