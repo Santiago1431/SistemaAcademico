@@ -50,7 +50,7 @@ O projeto está mapeado com **JPA/Hibernate** (anotações `@Entity`, `@ManyToOn
  
 <img width="1011" height="432" alt="Image" src="https://github.com/user-attachments/assets/7bf240ea-dc3b-457c-bb24-a6160149d630" />
 
-Sugestão de pasta no repositório: `docs/imagens/`.
+
 
 ---
 
