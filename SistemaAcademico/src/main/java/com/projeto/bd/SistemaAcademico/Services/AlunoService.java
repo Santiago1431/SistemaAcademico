@@ -33,7 +33,7 @@ public class AlunoService {
     }
 
     public Aluno salvarAluno(Aluno aluno) {
-        // Aqui você pode adicionar lógica de negócio, como validação de CPF.
+        // Aqui pode adicionar lógica de negócio, como validação de CPF.
         return alunoRepository.save(aluno);
     }
 
